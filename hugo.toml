@@ -1,0 +1,27 @@
+baseURL = "https://CristianGarza.github.io/"
+languageCode = "en-us"
+title = "Cristian Garza — Penetration Tester"
+
+[params]
+  name = "Cristian Garza"
+  role = "Penetration Tester (OSCP) · Software Engineer"
+  location = "Houston, Texas"
+  email = "garzacristianm@gmail.com"
+  phone = REMOVED" "
+  htb = "https://app.hackthebox.com/public/users/1278586"
+  linkedin = "https://linkedin.com/in/cristian-garza-6b639b14b"
+  github = "https://github.com/yourusername"
+  resumePdf = "/resume.pdf"
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[[menu.main]]
+  name = "Write-ups"
+  url = "/writeups/"
+  weight = 10
+
+[[menu.main]]
+  name = "Resume"
+  url = "/resume.pdf"
+  weight = 20

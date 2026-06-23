@@ -1,0 +1,178 @@
+{{ define "main" }}
+
+<section class="hero">
+  <div class="wrap hero__inner">
+    <div class="hero__text">
+      <p class="eyebrow">OSCP-certified · Houston, TX</p>
+      <h1 class="hero__title">Cristian Garza</h1>
+      <p class="hero__role">Penetration Tester &amp; Software Engineer</p>
+      <p class="hero__desc">
+        I find the bugs that matter and explain why they matter. Four years building production
+        software, now applied to breaking it — Active Directory, web applications, and
+        cloud infrastructure.
+      </p>
+      <div class="hero__actions">
+        <a href="{{ .Site.Params.resumePdf }}" class="btn btn--primary">Download résumé</a>
+        <a href="#writeups" class="btn btn--ghost">Read write-ups</a>
+      </div>
+    </div>
+    <div class="hero__term" aria-hidden="true">
+      <div class="term">
+        <div class="term__bar">
+          <span class="term__dot"></span><span class="term__dot"></span><span class="term__dot"></span>
+          <span class="term__title">whoami.sh</span>
+        </div>
+        <pre class="term__body"><code id="termOutput"></code><span class="term__cursor">&#9608;</span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="about">
+  <div class="wrap two-col">
+    <div class="two-col__label">
+      <p class="eyebrow">01 — Summary</p>
+    </div>
+    <div class="two-col__body">
+      <p>
+        OSCP-certified offensive security professional with a software engineering background.
+        I've spent the last four years developing and deploying production systems, then securing
+        them — which means I read code and infrastructure the way an attacker does, not just
+        the way a checklist does.
+      </p>
+      <p>
+        Strongest in Active Directory attack paths, web application assessment, and turning
+        manual testing workflows into repeatable automation. Comfortable across the full stack:
+        from a Python exploit script to the Docker Swarm cluster it's tested against.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="experience">
+  <div class="wrap">
+    <p class="eyebrow">02 — Experience</p>
+    <ol class="timeline">
+      <li class="timeline__item">
+        <div class="timeline__when">Sep 2025 — Present</div>
+        <div class="timeline__content">
+          <h3>Cybersecurity Consultant</h3>
+          <p class="timeline__org">Texas Center for Cell Therapy and Research</p>
+          <p>Completed OSCP certification. Implemented endpoint encryption and secure configurations,
+            deployed internal email infrastructure, and supported day-to-day IT and security operations.</p>
+        </div>
+      </li>
+      <li class="timeline__item">
+        <div class="timeline__when">Dec 2023 — Sep 2025</div>
+        <div class="timeline__content">
+          <h3>Systems Software Engineer</h3>
+          <p class="timeline__org">CyManII</p>
+          <p>Built tooling for cybersecurity research in industrial and manufacturing environments.
+            Managed containerized research workflows with Docker Swarm and automated testing pipelines
+            in Python and JavaScript, working alongside government, academic, and industry partners.</p>
+        </div>
+      </li>
+      <li class="timeline__item">
+        <div class="timeline__when">Jul 2021 — Apr 2023</div>
+        <div class="timeline__content">
+          <h3>Full Stack Software Engineer</h3>
+          <p class="timeline__org">Cariloop</p>
+          <p>Built and maintained full-stack applications in TypeScript, Angular, and Loopback 4.
+            Deployed and managed production services on AWS with Docker and Nginx.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<section class="section" id="skills">
+  <div class="wrap">
+    <p class="eyebrow">03 — Toolset</p>
+    <div class="skills-grid">
+      <div class="skills-card">
+        <h3>Offensive Security</h3>
+        <p>Burp Suite, Metasploit, BloodHound, Impacket, SQLMap, Wireshark, NetExec</p>
+      </div>
+      <div class="skills-card">
+        <h3>Programming</h3>
+        <p>Python, JavaScript / TypeScript, Bash, C / C++, Java, C#</p>
+      </div>
+      <div class="skills-card">
+        <h3>Infrastructure</h3>
+        <p>Docker, Docker Swarm, AWS, Linux, Nginx</p>
+      </div>
+      <div class="skills-card">
+        <h3>Web Technologies</h3>
+        <p>Angular, React, Loopback 4, SQL, MongoDB</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="writeups">
+  <div class="wrap">
+    <div class="section-head">
+      <p class="eyebrow">04 — Write-ups</p>
+      <a href="/writeups/" class="section-head__link">View all →</a>
+    </div>
+    <div class="card-grid">
+      {{ range first 3 (where .Site.RegularPages "Section" "writeups") }}
+      <a href="{{ .RelPermalink }}" class="writeup-card{{ if .Params.draft }} writeup-card--placeholder{{ end }}">
+        <div class="writeup-card__tags">
+          {{ range .Params.tags }}<span>{{ . }}</span>{{ end }}
+        </div>
+        <h3>{{ .Title }}</h3>
+        <p>{{ .Params.summary }}</p>
+        <span class="writeup-card__status">{{ if .Params.placeholder }}Coming soon{{ else }}Read write-up →{{ end }}</span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+
+<section class="section" id="certifications">
+  <div class="wrap">
+    <p class="eyebrow">05 — Certifications</p>
+    <div class="cert-row">
+      <div class="cert">
+        <span class="cert__year">2026</span>
+        <span class="cert__name">Offensive Security Certified Professional (OSCP)</span>
+      </div>
+      <div class="cert">
+        <span class="cert__year">2023</span>
+        <span class="cert__name">CompTIA Security+</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var el = document.getElementById('termOutput');
+  if (!el) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var lines = [
+    '$ whoami',
+    'cgarza',
+    '$ cat role.txt',
+    'Penetration Tester (OSCP) / Software Engineer',
+    '$ ls strengths/',
+    'active-directory  web-apps  automation  cloud',
+    '$ status',
+    '[+] Open to new opportunities'
+  ];
+  var full = lines.join('\n');
+  if (reduce) { el.textContent = full; return; }
+  var i = 0;
+  function type() {
+    if (i <= full.length) {
+      el.textContent = full.slice(0, i);
+      i += 2;
+      setTimeout(type, 14);
+    }
+  }
+  type();
+})();
+</script>
+
+{{ end }}

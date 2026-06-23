@@ -1,0 +1,22 @@
+{{ define "main" }}
+<section class="section section--page">
+  <div class="wrap wrap--narrow">
+    {{ if .Params.placeholder }}
+    <p class="eyebrow">Coming soon</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    <p class="page-intro">{{ .Params.summary }}</p>
+    <p class="placeholder-note">This write-up hasn't been published yet — check back soon, or see the
+      <a href="/writeups/">full write-ups list</a>.</p>
+    {{ else }}
+    <p class="eyebrow">{{ .Date.Format "Jan 2006" }}</p>
+    <h1 class="page-title">{{ .Title }}</h1>
+    <div class="writeup-card__tags">
+      {{ range .Params.tags }}<span>{{ . }}</span>{{ end }}
+    </div>
+    <div class="prose">
+      {{ .Content }}
+    </div>
+    {{ end }}
+  </div>
+</section>
+{{ end }}

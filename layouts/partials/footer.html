@@ -1,0 +1,20 @@
+<footer class="site-footer" id="contact">
+  <div class="wrap site-footer__inner">
+    <div class="site-footer__col">
+      <p class="eyebrow">Get in touch</p>
+      <h3 class="site-footer__heading">Open to penetration tester roles.</h3>
+      <div class="contact-list">
+        <a href="mailto:{{ .Site.Params.email }}">{{ .Site.Params.email }}</a>
+        <a href="tel:{{ .Site.Params.phone }}">{{ .Site.Params.phone }}</a>
+        <a href="{{ .Site.Params.linkedin }}" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="{{ .Site.Params.htb }}" target="_blank" rel="noopener">HackTheBox</a>
+        <a href="{{ .Site.Params.github }}" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+    <div class="site-footer__col site-footer__meta">
+      <span>{{ .Site.Params.location }}</span>
+      <span class="dot">·</span>
+      <span>&copy; {{ now.Format "2006" }} {{ .Site.Params.name }}</span>
+    </div>
+  </div>
+</footer>
