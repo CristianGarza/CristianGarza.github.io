@@ -18,11 +18,11 @@ An `autorecon` scan was run against the target, identifying two open services:
 ### 1.1 Web Server
 Browsing to the web service revealed a landing page.
 
-![](/screenshots/Dog/Dog-1.png)
+![](screenshots/Dog-1.png)
 
 A domain name associated with the target was also identified.
 
-![](/screenshots/Dog/Dog-2.png)
+![](screenshots/Dog-2.png)
 
 The site was identified as being powered by **Backdrop CMS**.
 
@@ -38,7 +38,7 @@ A known RCE vulnerability exists for Backdrop CMS version **1.27.1**. The exact 
 ### 2.2 Blocked by robots.txt
 The identified RCE technique requires access to the `/admin/modules/install` path. However, the broader `/admin` path was disallowed via `robots.txt`.
 
-![](/screenshots/Dog/Dog-3.png)
+![](screenshots/Dog-3.png)
 
 This blocked direct exploitation at this stage, requiring an alternate route to authenticated access.
 
@@ -47,12 +47,12 @@ This blocked direct exploitation at this stage, requiring an alternate route to 
 
 - **`/core`** — exposed a number of interesting files/directories.
 
-  ![](/screenshots/Dog/Dog-4.png)
+  ![](screenshots/Dog-4.png)
 
 - **`/.git`** — an exposed Git repository.
     - Using the [git-dumper tool](https://github.com/arthaud/git-dumper) we can clone the repository.
 
-  ![](/screenshots/Dog/Dog-5.png)
+  ![](screenshots/Dog-5.png)
 
 ---
 
@@ -62,11 +62,11 @@ Dumping the exposed `.git` repository yielded:
 
 - A set of **credentials**.
 
-  ![](/screenshots/Dog/Dog-6.png)
+  ![](screenshots/Dog-6.png)
 
 - A **password hash salt**.
 
-  ![](/screenshots/Dog/Dog-7.png)
+  ![](screenshots/Dog-7.png)
 
 ### 3.1 Database / User Enumeration
 An attempt was made to enumerate the application's database (recovered via the git dump) in order to extract user accounts and password hashes for use against the login page.
@@ -90,16 +90,16 @@ With admin access, a known exploit module was uploaded:
 
 Uploading this module exposed an endpoint capable of accepting and executing arbitrary commands.
 
-![](/screenshots/Dog/Dog-8.png)
+![](screenshots/Dog-8.png)
 
 ### 4.2 Reverse Shell
 A reverse shell payload was sent to the exposed command endpoint via `curl`.
 
-![](/screenshots/Dog/Dog-9.png)
+![](screenshots/Dog-9.png)
 
 The payload executed successfully, returning a shell on the target.
 
-![](/screenshots/Dog/Dog-10.png)
+![](screenshots/Dog-10.png)
 
 ---
 
@@ -108,21 +108,21 @@ The payload executed successfully, returning a shell on the target.
 ### 5.1 User Enumeration on the Box
 From the reverse shell, a list of local user accounts was obtained.
 
-![](/screenshots/Dog/Dog-11.png)
+![](screenshots/Dog-11.png)
 
 ### 5.2 Credential Reuse — login as john
 Using credentials recovered earlier from the `settings.php` file (via the git dump), a login was obtained for the local user **`john`**.
 
-![](/screenshots/Dog/Dog-12.png)
+![](screenshots/Dog-12.png)
 
 ### 5.3 Sudo Misconfiguration — `bee`
 Enumeration of `john`'s sudo privileges revealed permission to run the **`bee`** command (Backdrop CMS's CLI tool) as root.
 
-![](/screenshots/Dog/Dog-13.png)
+![](screenshots/Dog-13.png)
 
 `bee` includes an **`eval`** option capable of executing arbitrary code, which — combined with root-level sudo access — provided a direct path to privilege escalation.
 
-![](/screenshots/Dog/Dog-14.png)
+![](screenshots/Dog-14.png)
 
 ### 5.4 Root
 By running the `eval` option from `/var/ww/html`, arbitrary code execution as root was achieved, completing the box.
