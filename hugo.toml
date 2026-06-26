@@ -9,7 +9,7 @@ title = "Cristian Garza — Penetration Tester"
   email = "garzacristianm@gmail.com"
   htb = "https://app.hackthebox.com/public/users/1278586"
   linkedin = "https://linkedin.com/in/cristian-garza-6b639b14b"
-  github = "https://github.com/yourusername"
+  github = "https://github.com/CristianGarza"
   resumePdf = "/resume.pdf"
 
 [markup.goldmark.renderer]

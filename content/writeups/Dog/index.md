@@ -1,10 +1,10 @@
 ---
 title: "Dog"
 summary: "Exposed Spring Boot actuators lead to session hijacking, RCE, and eventually root"
-tags: []
-placeholder: false
 platform: HackTheBox
 difficulty: Easy
+tags: [git-dumper, Web Application, Password Cracking, sudo Misconfiguation]
+placeholder: false
 date: 2026-06-25
 ---
 
@@ -33,8 +33,6 @@ The site was identified as being powered by **Backdrop CMS**.
 ### 2.1 Version Assumption
 A known RCE vulnerability exists for Backdrop CMS version **1.27.1**. The exact running version was not confirmed — it was assumed based on a hunch rather than direct verification.
 
-[TODO: confirm actual Backdrop version if revisited]
-
 ### 2.2 Blocked by robots.txt
 The identified RCE technique requires access to the `/admin/modules/install` path. However, the broader `/admin` path was disallowed via `robots.txt`.
 
@@ -50,7 +48,7 @@ This blocked direct exploitation at this stage, requiring an alternate route to 
   ![](screenshots/Dog-4.png)
 
 - **`/.git`** — an exposed Git repository.
-    - Using the [git-dumper tool](https://github.com/arthaud/git-dumper) we can clone the repository.
+    - Using the [<u>git-dumper tool</u>](https://github.com/arthaud/git-dumper) we can clone the repository.
 
   ![](screenshots/Dog-5.png)
 
@@ -64,16 +62,18 @@ Dumping the exposed `.git` repository yielded:
 
   ![](screenshots/Dog-6.png)
 
-- A **password hash salt**.
+- A **password hash salt** (not needed).
 
   ![](screenshots/Dog-7.png)
 
 ### 3.1 Database / User Enumeration
-An attempt was made to enumerate the application's database (recovered via the git dump) in order to extract user accounts and password hashes for use against the login page.
+An attempt was made to enumerate the application's database (recovered via the git dump) in order to extract user accounts and password hashes for use against the login page. The local database didn't give us anything. 
 
-This was not completed independently — a walkthrough (ippsec) instead used a separate enumeration tool to extract a list of valid usernames from the website directly, then password-sprayed those usernames with the previously discovered password.
+We can use the [<u>BackDropScan tool</u>](https://github.com/FisMatHack/BackDropScan) to scan the list of users on the site using this command.
 
-[TODO: name the specific enumeration tool used, and document the full list of usernames recovered]
+```
+python BackDropScan.py --url http://dog.htb --userslist /usr/share/seclists/Usernames/Names/names.txt --userenum
+```
 
 This spray succeeded against the user **`tiffany`**.
 
@@ -86,7 +86,7 @@ The `tiffany` account had **admin** privileges, granting access to the module up
 ### 4.1 CSRF-to-RCE Module
 With admin access, a known exploit module was uploaded:
 
-- Module source: [CSRF-to-RCE-on-Backdrop-CMS (V1n1v131r4)](https://github.com/V1n1v131r4/CSRF-to-RCE-on-Backdrop-CMS/releases/tag/backdrop)
+- Module source: [<u>CSRF-to-RCE-on-Backdrop-CMS (V1n1v131r4)</u>](https://github.com/V1n1v131r4/CSRF-to-RCE-on-Backdrop-CMS/releases/tag/backdrop)
 
 Uploading this module exposed an endpoint capable of accepting and executing arbitrary commands.
 
@@ -151,22 +151,3 @@ sudo bee eval 'system("/bin/bash");
 - Exposed `.git` directories are a critical information disclosure risk, frequently leaking credentials, secrets, and configuration files (here, via `settings.php`).
 - Password reuse across web application accounts and local system accounts (`john`) significantly increased the impact of the initial credential leak.
 - CLI utilities bundled with CMS platforms (like `bee`) can introduce dangerous privilege escalation paths when granted broad `sudo` rights, especially when they expose code-evaluation features.
-
----
-
-## Open Items / Follow-Up
-The following details were not fully captured in the original session notes and should be revisited to complete this writeup:
-
-- [ ] Landing page description and domain name
-- [ ] Confirmed Backdrop CMS version
-- [ ] Exact `robots.txt` contents
-- [ ] Contents of `/core` path found via feroxbuster
-- [ ] Tool used to dump `.git` repository
-- [ ] Location/value of leaked credentials and password hash salt
-- [ ] Username enumeration tool and full list of recovered usernames
-- [ ] Exact CSRF-to-RCE module endpoint and curl payload used
-- [ ] User context of the resulting reverse shell
-- [ ] Local user enumeration method/command and full user list
-- [ ] Method used to authenticate as `john`
-- [ ] Exact `sudo -l` output for `john`
-- [ ] Exact `bee eval` command and working directory used for final root escalation

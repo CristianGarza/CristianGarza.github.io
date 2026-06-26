@@ -35,7 +35,7 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
   margin: 0 auto;
   padding: 0 28px;
 }
-.wrap--narrow { max-width: 720px; }
+.wrap--narrow { max-width: 900px; }
 
 .eyebrow {
   font-family: var(--font-mono);
@@ -306,6 +306,36 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
 .placeholder-note a { color: var(--accent); }
 .prose { color: var(--text-muted); margin-top: 24px; }
 .prose :is(h2, h3) { color: var(--text); margin: 28px 0 12px; }
+.writeup-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: -.25rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  color: var(--text-muted, #666);
+}
+.writeup-meta__difficulty {
+  font-weight: 600;
+  padding: 0.1rem 0.5rem;
+  border-radius: 0.3rem;
+}
+.difficulty--easy {
+  color: #1a7f37;
+  background: rgba(26, 127, 55, 0.1);
+}
+.difficulty--medium {
+  color: #9a8200;
+  background: rgba(154, 130, 0, 0.1);
+}
+.difficulty--hard {
+  color: #c2641a;
+  background: rgba(194, 100, 26, 0.1);
+}
+.difficulty--very-hard {
+  color: #c0292e;
+  background: rgba(192, 41, 46, 0.1);
+}
 
 /* ====== Certifications ====== */
 .cert-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }

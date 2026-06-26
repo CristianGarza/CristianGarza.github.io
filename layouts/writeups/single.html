@@ -10,6 +10,13 @@
     {{ else }}
     <p class="eyebrow">{{ .Date.Format "Jan 2006" }}</p>
     <h1 class="page-title">{{ .Title }}</h1>
+    <!-- <h3>{{ .Params.platform }} - {{ .Params.difficulty }}</h3> -->
+    <div class="writeup-meta">
+      <span class="writeup-meta__platform">{{ .Params.platform }}</span>
+      {{ with .Params.difficulty }}
+      <span class="writeup-meta__difficulty difficulty--{{ . | urlize }}">{{ . }}</span>
+      {{ end }}
+    </div>
     <div class="writeup-card__tags">
       {{ range .Params.tags }}<span>{{ . }}</span>{{ end }}
     </div>
