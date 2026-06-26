@@ -1,6 +1,6 @@
 ---
 title: "Dog"
-summary: ""
+summary: "Exposed Spring Boot actuators lead to session hijacking, RCE, and eventually root"
 tags: []
 placeholder: false
 platform: HackTheBox
