@@ -5,7 +5,7 @@ platform: HackTheBox
 difficulty: Easy
 tags: [git-dumper, Web Application, Password Cracking, sudo Misconfiguation]
 placeholder: false
-date: 2026-06-25
+date: 2025-11-12
 ---
 
 ## 1. Reconnaissance
@@ -71,7 +71,7 @@ An attempt was made to enumerate the application's database (recovered via the g
 
 We can use the [<u>BackDropScan tool</u>](https://github.com/FisMatHack/BackDropScan) to scan the list of users on the site using this command.
 
-```
+```bash
 python BackDropScan.py --url http://dog.htb --userslist /usr/share/seclists/Usernames/Names/names.txt --userenum
 ```
 
@@ -125,10 +125,10 @@ Enumeration of `john`'s sudo privileges revealed permission to run the **`bee`**
 ![](screenshots/Dog-14.png)
 
 ### 5.4 Root
-By running the `eval` option from `/var/ww/html`, arbitrary code execution as root was achieved, completing the box.
+By running the `eval` option from `/var/www/html`, arbitrary code execution as root was achieved, completing the box.
 
-```
-sudo bee eval 'system("/bin/bash");
+```bash
+sudo bee eval 'system("/bin/bash");'
 ```
 
 ---
