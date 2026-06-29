@@ -376,6 +376,13 @@ h1, h2, h3 { margin: 0; font-weight: 600; }
   gap: 8px;
 }
 
+/* inline code only — excludes code inside <pre> blocks */
+:not(pre) > code {
+  background-color: rgba(135, 131, 120, 0.15);
+  border-radius: 4px;
+  padding: 0.15em 0.4em;
+}
+
 /* ====== Responsive ====== */
 @media (max-width: 880px) {
   .hero__inner { grid-template-columns: 1fr; }
