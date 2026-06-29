@@ -1,6 +1,6 @@
 ---
 title: "Chatterbox"
-summary: "An outdated Achat service on a non-standard port is exploited for a SYSTEM shell, and a reused default credential found during enumeration allows a privileged payload to be executed via SMB"
+summary: "Outdated Achat service leads to user shell, and reused login creds allow privileged code execution via SMB"
 platform: HackTheBox
 difficulty: Medium
 tags: [Windows, Achat, Buffer Overflow, SMB, Privilege Escalation]
