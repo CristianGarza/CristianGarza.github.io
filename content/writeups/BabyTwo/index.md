@@ -1,9 +1,9 @@
 ---
 title: "BabyTwo"
-summary: "Guest access to SMB shares leaks weak credentials, a misconfigured SYSVOL share allows the domain logon script to be overwritten for a shell, and group membership in a legacy GPO-editing group is abused via pyGPOAbuse for domain admin"
-platform: HackTheBox
+summary: "Guest SMB access leaks weak creds, misconfigured SYSVOL share lets logon script be overwritten for shell, and legacy GPO-editing group grants domain admin via pyGPOAbuse"
+platform: HackTheBox/VulnLab
 difficulty: Medium
-tags: [Active Directory, SMB, GPO Abuse, BloodHound, Privilege Escalation]
+tags: [Active Directory, SMB Abuse, GPO Abuse, BloodHound]
 placeholder: false
 date: 2026-05-14
 ---

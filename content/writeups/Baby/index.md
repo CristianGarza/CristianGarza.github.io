@@ -1,9 +1,9 @@
 ---
 title: "Baby"
-summary: "LDAP enumeration leaks a default password and reveals hidden user accounts, a stale Active Directory password is reset over SMB for initial access, and SeBackupPrivilege is abused to dump the NTDS.dit for domain admin"
+summary: "LDAP leaks a default password and hidden accounts, a stale password is reset over SMB for access, and SeBackupPrivilege dumps the NTDS.dit for domain admin"
 platform: HackTheBox/VulnLab
 difficulty: Easy
-tags: [Active Directory, LDAP, Kerberos, SMB, SeBackupPrivilege, NTDS, Privilege Escalation]
+tags: [Active Directory, LDAP, Kerberos, SMB, SeBackupPrivilege, Credential Harvesting]
 placeholder: false
 date: 2026-05-14
 ---
