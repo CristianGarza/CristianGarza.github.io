@@ -1,0 +1,25 @@
+{{ define "main" }}
+<section class="section section--page">
+  <div class="wrap">
+    <p class="eyebrow">SOC Practice</p>
+    <h1 class="page-title">Blue Team Practice Write-Ups</h1>
+    <p class="page-intro">
+      Self-directed blue team lab projects — SIEM deployment, threat intel integration, and
+      detection engineering. Focused on end-to-end pipelines: raw telemetry in, actionable
+      incidents out.
+    </p>
+    <div class="card-grid card-grid--list">
+      {{ range .Pages.ByDate }}
+      <a href="{{ .RelPermalink }}" class="writeup-card{{ if .Params.placeholder }} writeup-card--placeholder{{ end }}">
+        <div class="writeup-card__tags">
+          {{ range .Params.tags }}<span>{{ . }}</span>{{ end }}
+        </div>
+        <h3>{{ .Title }}</h3>
+        <p>{{ .Params.summary }}</p>
+        <span class="writeup-card__status">{{ if .Params.placeholder }}Coming soon{{ else }}Read report →{{ end }}</span>
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</section>
+{{ end }}

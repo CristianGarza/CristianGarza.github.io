@@ -21,6 +21,11 @@ title = "Cristian Garza — Penetration Tester"
   weight = 10
 
 [[menu.main]]
+  name = "SOC Training Labs"
+  url = "/socdocs/"
+  weight = 15
+
+[[menu.main]]
   name = "Resume"
   url = "/resume.pdf"
   weight = 20

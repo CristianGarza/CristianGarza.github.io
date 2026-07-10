@@ -1,0 +1,3 @@
+---
+title: "SOC Write-ups"
+---
