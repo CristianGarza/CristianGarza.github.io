@@ -9,7 +9,7 @@
       differently next time.
     </p>
     <div class="card-grid card-grid--list">
-      {{ range .Pages }}
+      {{ range .Pages.ByDate.Reverse }}
       <a href="{{ .RelPermalink }}" class="writeup-card{{ if .Params.placeholder }} writeup-card--placeholder{{ end }}">
         <div class="writeup-card__tags">
           {{ range .Params.tags }}<span>{{ . }}</span>{{ end }}
