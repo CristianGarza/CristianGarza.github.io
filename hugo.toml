@@ -1,10 +1,10 @@
 baseURL = "https://CristianGarza.github.io/"
 languageCode = "en-us"
-title = "Cristian Garza — Penetration Tester"
+title = "Cristian Garza — Security Professional"
 
 [params]
   name = "Cristian Garza"
-  role = "Penetration Tester (OSCP) · Software Engineer"
+  role = "Offensive & Defensive Security · Software Engineer"
   location = "Houston, Texas"
   email = "garzacristianm@gmail.com"
   htb = "https://app.hackthebox.com/public/users/1278586"
