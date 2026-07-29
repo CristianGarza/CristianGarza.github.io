@@ -1,17 +1,19 @@
 ---
 title: "Purple Team SOC Lab — Attack & Detect"
 summary: "Executed 13 MITRE ATT&CK-mapped attacks against a self-built AD lab and Juice Shop, engineering and tuning a Splunk detection for each."
-platform: Splunk · Kali Linux · Active Directory · OWASP Juice Shop
-tags: [Detection Engineering, MITRE ATT&CK, Splunk, Active Directory, Kerberoasting, Lateral Movement, Purple Team, OWASP, SPL]
+platform: Splunk · Kali · Active Directory
+tags: [Detection Engineering, MITRE ATT&CK, Splunk, Active Directory, Kerberoasting, Purple Team, OWASP, SPL]
 placeholder: false
-date: 2026-07-24
+date: 2026-07-28
 ---
 
 ## Overview
+The full lab topology — all six VMs, network segments, and log forwarding paths. 
+Full build documentation in [<u>Part 1</u>](/socdocs/purple-team-soc-lab---environment-build/).
 
 ![](screenshots/attack-32.png)
 
-This is the attack and detection log for the lab built in Part 1: [<u>Purple Team SOC Lab — Environment Build</u>](/socdocs/purple-team-lab-build/). Fourteen attacks, eight against the Active Directory domain (`lab.local`) and six against an OWASP Juice Shop instance, each run from Kali and each paired with a Splunk detection I wrote and tuned against the live telemetry it produced.
+This is the attack and detection log for the lab built in Part 1: [<u>Purple Team SOC Lab — Environment Build</u>](/socdocs/purple-team-soc-lab---environment-build/). Thirteen attacks, seven against the Active Directory domain (`lab.local`) and six against an OWASP Juice Shop instance, each run from Kali and each paired with a Splunk detection I wrote and tuned against the live telemetry it produced.
 
 The goal wasn't just to get an attack to succeed. It was to see exactly what it looked like in the logs, figure out what a real detection needs to key on, and find out where the default configuration and default logging assumptions fall short. Several of these did not detect cleanly on the first attempt, and the tuning process is documented as part of the writeup rather than cleaned up after the fact.
 
@@ -20,6 +22,8 @@ Before any of this, Advanced Audit Policy on DC01 was confirmed to actually be l
 ---
 
 ## Section A: Active Directory
+
+The `lab.local` domain structure — six noise accounts in the LabUsers OU alongside three intentionally misconfigured accounts and the reused local admin credential seeded across DC01 and CLIENT02.
 
 ![](screenshots/attack-33.png)
 
@@ -78,6 +82,8 @@ index=main EventCode=4769 Ticket_Encryption_Type=0x17 Account_Name!="*$"
 | where ticket_requests >= 1
 | convert ctime(last_seen)
 ```
+*Saved as a real-time Splunk alert — throttled on `Account_Name`, 
+10-minute suppression window.*
 
 ![](screenshots/attack-5.png)
 ![](screenshots/attack-6.png)
@@ -108,6 +114,8 @@ index=main EventCode=4768 Pre_Authentication_Type=0
 | stats count as auth_requests, latest(_time) as last_seen by Account_Name, Client_Address, risk
 | convert ctime(last_seen)
 ```
+*Saved as a real-time Splunk alert — throttled on `Account_Name`, 
+10-minute suppression window. Any single result triggers immediately.*
 
 ![](screenshots/attack-8.png)
 
@@ -138,6 +146,8 @@ index=main (EventCode=4625 OR EventCode=4776) src_ip=10.10.10.104
 | stats dc(Account_Name) as unique_accounts, values(auth_type) as event_types by _time, src_ip
 | where unique_accounts > 3
 ```
+*Saved as a real-time Splunk alert — throttled on `src_ip`, 
+10-minute suppression window.*
 
 ![](screenshots/attack-10.png)
 
@@ -187,6 +197,8 @@ index=main host=DC01 (EventCode=7045 OR (EventCode=4624 Logon_Type=3)) earliest=
 | where EventCode=7045
 | table _time, host, Service_Name, Service_File_Name, recent_src_ip
 ```
+*Saved as a real-time Splunk alert — throttled on `host`, 
+10-minute suppression window. Fires on any result.*
 
 ![](screenshots/attack-13.png)
 
@@ -237,6 +249,8 @@ index=main EventCode=10 TargetImage="*lsass.exe*"
 | convert ctime(last_seen)
 | sort -last_seen
 ```
+*Saved as a real-time Splunk alert — throttled on `SourceImage`, 
+10-minute suppression window. Fires on any result.*
 
 ![](screenshots/attack-16.png)
 
@@ -271,6 +285,8 @@ index=main (EventCode=1 OR EventCode=4688)
 | table _time, host, parent, Image, User, suspicion, cmd
 | sort -_time
 ```
+*Saved as a real-time Splunk alert — throttled on `host`, 
+10-minute suppression window.*
 
 ![](screenshots/attack-18.png)
 ![](screenshots/attack-19.png)
@@ -301,6 +317,8 @@ Attacks 8–13 target the Juice Shop instance at 10.10.10.50, running behind an 
 index=main sourcetype=access_combined uri="/rest/user/login"
 | regex _raw="(?i)(\'\s*or\s*1=1|union\s+select|--)"
 ```
+*Saved as a real-time Splunk alert — throttled on `clientip`, 
+10-minute suppression window. Fires on any result.*
 
 ![](screenshots/attack-22.png)
 
@@ -314,7 +332,7 @@ index=main sourcetype=access_combined uri="/rest/user/login"
 
 **Scenario:** Injected a JavaScript payload into the Juice Shop search bar, representing a client-side script injection attack.
 
-**Attack:** Submitted `<iframe src="javascript:alert`xss`)">` into the search field.
+**Attack:** Submitted ```<iframe src="javascript:alert`xss`)">``` into the search field.
 
 ![](screenshots/attack-23.png)
 
@@ -344,6 +362,8 @@ index=main sourcetype=access_combined uri="*basket*"
 | stats dc(basket_id) as unique_baskets, values(basket_id) as ids_accessed by clientip, _time
 | where unique_baskets > 3
 ```
+*Saved as a real-time Splunk alert — throttled on `clientip`, 
+10-minute suppression window.*
 
 ![](screenshots/attack-25.png)
 
@@ -381,6 +401,8 @@ index=main sourcetype=access_combined uri="*reset-password*" method=POST
 | table _time, clientip, reset_attempts, attempts_per_sec, response_codes, outcome, severity, user_agents
 | sort -reset_attempts
 ```
+*Saved as a real-time Splunk alert — throttled on `clientip`, 
+10-minute suppression window.*
 
 ![](screenshots/attack-27.png)
 
@@ -410,6 +432,8 @@ index=main sourcetype=access_combined uri="*/ftp*"
 | stats count, values(uri) as accessed_paths, values(status) as response_codes by clientip, alert_type
 | sort -count
 ```
+*Saved as a real-time Splunk alert — throttled on `clientip`, 
+10-minute suppression window. Fires on any result.*
 
 ![](screenshots/attack-29.png)
 
@@ -450,6 +474,8 @@ index=main sourcetype=access_combined
 | where requests > 50 OR unique_uris > 50
 | sort -requests
 ```
+*Saved as a real-time Splunk alert — throttled on `clientip`, 
+10-minute suppression window. Fires on any result.*
 
 ![](screenshots/attack-31.png)
 
@@ -478,5 +504,10 @@ index=main sourcetype=access_combined
 | 13 | Automated scanning (ZAP) | T1595.002 | nginx access log | Behavioral detection avoids relying on spoofable user-agent strings |
 
 Two of the thirteen attacks — the nmap scan and the DOM-based XSS — don't have a working detection in this lab, and that's intentional. Both are documented as genuine visibility gaps rather than tuned around, because the honest output of a purple team exercise isn't "everything got caught," it's an accurate map of what your current telemetry can and can't see. The rest required real tuning: adjusting thresholds against actual attack data, correlating multiple event sources to recover attribution a single log couldn't provide, and finding — and fixing — a default Sysmon config that silently dropped one of the highest-value credential-theft detections in the whole build.
+
+For every detection that fired, the SPL query was saved as a live real-time Splunk 
+alert with field-based throttling — `Account_Name` for credential attacks, `src_ip` 
+or `clientip` for network and web attacks, `host` for execution-based detections. 
+Attacks 1 and 9 have no saved alert.
 
 Environment build and full network/host configuration: [<u>Purple Team SOC Lab — Environment Build</u>](/socdocs/purple-team-soc-lab---environment-build/).

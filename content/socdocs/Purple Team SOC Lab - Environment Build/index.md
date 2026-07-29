@@ -4,7 +4,7 @@ summary: "Designed and built an isolated multi-VM cyber range from scratch: pfSe
 platform: VMware · Splunk · Active Directory
 tags: [Lab Build, Active Directory, Splunk, Sysmon, pfSense, Detection Engineering, Network Segmentation]
 placeholder: false
-date: 2026-07-24
+date: 2026-07-27
 ---
 
 ## Overview
